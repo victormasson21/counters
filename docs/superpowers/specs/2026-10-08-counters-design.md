@@ -54,7 +54,7 @@ Fields:
 - Title — text, required.
 - Start — `datetime-local`, minute precision. New counter default: now.
 - Unit — select: days, seconds, centiseconds. New counter default: days.
-- Limit — number input, integer 0–90, in days. New counter default: 0.
+- Limit — select of whole days 0–90 (a wheel picker on iOS). New counter default: 0.
 
 Buttons:
 
@@ -75,7 +75,7 @@ Validation: the file must parse as a JSON array, and every item must match `Coun
 
 - Elapsed time = `max(0, now - start)`.
 - Format: `Nd HH:MM:SS.cc`. The unit sets where the display stops; each part truncates, never rounds.
-  - `days`: `1d`
+  - `days`: `1 day`, `12 days`, `0 days`
   - `seconds`: `1d 02:09:01`
   - `centiseconds`: `1d 02:09:01.34`
 - The day count has no padding and shows `0d` under one day. Hours, minutes, seconds and centiseconds pad to two digits.
@@ -104,7 +104,7 @@ One shared clock drives every card. It ticks every 10 ms when any card shows cen
 
 - Git repo `~/Repos/perso/counters`; GitHub repo `victormasson21/counters`.
 - `.github/workflows/deploy.yml`: the litcal Pages workflow, built with `pnpm build`, uploading `dist`.
-- `public/CNAME` with `counters.vicm.dev`; Vite `base` stays `/`.
+- Vite `base` stays `/`. No `CNAME` file: Actions-based Pages ignores it and reads the domain from the repo settings.
 - Cloudflare DNS: CNAME `counters` → `victormasson21.github.io`, DNS only.
 - GitHub repo settings: Pages source = GitHub Actions, custom domain `counters.vicm.dev`, enforce HTTPS.
 
