@@ -26,5 +26,5 @@ export function downloadCounters(counters: readonly Counter[]): void {
   link.href = url
   link.download = exportFileName(Date.now())
   link.click()
-  URL.revokeObjectURL(url)
+  setTimeout(() => URL.revokeObjectURL(url))
 }

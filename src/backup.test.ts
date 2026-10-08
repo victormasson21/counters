@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest"
-import { exportFileName, parseCounters } from "./backup"
+import { afterEach, describe, expect, it, vi } from "vitest"
+import { downloadCounters, exportFileName, parseCounters } from "./backup"
 import type { Counter } from "./counter"
 
 const coffee: Counter = {
@@ -29,6 +29,29 @@ describe("parseCounters", () => {
     ["a missing start", JSON.stringify([{ id: "a1", title: "Coffee", unit: "days", limitDays: 0 }])],
   ])("rejects %s", (_label, json) => {
     expect(parseCounters(json)).toBeNull()
+  })
+})
+
+describe("downloadCounters", () => {
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it("revokes the file URL only after the download has started", () => {
+    vi.useFakeTimers()
+    const click = vi.fn()
+    vi.stubGlobal("document", { createElement: () => ({ click }) })
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:counters")
+    const revoke = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined)
+
+    downloadCounters([coffee])
+
+    expect(click).toHaveBeenCalledOnce()
+    expect(revoke).not.toHaveBeenCalled()
+    vi.runAllTimers()
+    expect(revoke).toHaveBeenCalledWith("blob:counters")
   })
 })
 

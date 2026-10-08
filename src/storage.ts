@@ -20,5 +20,5 @@ export function saveCounters(counters: readonly Counter[]): void {
 }
 
 export function requestPersistentStorage(): void {
-  void navigator.storage.persist()
+  void navigator.storage?.persist()
 }
