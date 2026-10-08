@@ -9,7 +9,11 @@ export function EmptyState(): JSX.Element {
         <img src={logo} alt="" width={76} height={76} />
       </div>
       <h2 className={styles.title}>No counters yet</h2>
-      <p className={styles.body}>Track the time since anything.</p>
+      <p className={styles.body}>
+        Track the time since anything
+        <br />
+        or until the next best thing.
+      </p>
     </div>
   )
 }
