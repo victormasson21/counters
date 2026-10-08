@@ -1,5 +1,6 @@
 import { useEffect, useState, type JSX } from "react"
 import styles from "./app.module.css"
+import { BackupModal } from "./backup-modal"
 import type { Counter } from "./counter"
 import { CounterCard } from "./counter-card"
 import { SettingsModal } from "./settings-modal"
@@ -9,7 +10,10 @@ import { useNow } from "./use-now"
 const CENTISECOND_TICK_MS = 10
 const SECOND_TICK_MS = 1_000
 
-type ModalState = { readonly kind: "settings"; readonly counter: Counter | null } | null
+type ModalState =
+  | { readonly kind: "settings"; readonly counter: Counter | null }
+  | { readonly kind: "backup" }
+  | null
 
 export function App(): JSX.Element {
   const [counters, setCounters] = useState(loadCounters)
@@ -35,6 +39,11 @@ export function App(): JSX.Element {
     closeModal()
   }
 
+  function importCounters(imported: readonly Counter[]): void {
+    setCounters(imported)
+    closeModal()
+  }
+
   return (
     <div className={styles.app}>
       <main className={styles.list}>
@@ -52,12 +61,18 @@ export function App(): JSX.Element {
         )}
       </main>
       <footer className={styles.footer}>
+        <button type="button" className={styles.backup} onClick={() => setModal({ kind: "backup" })}>
+          Backup
+        </button>
         <button type="button" className={styles.add} onClick={() => setModal({ kind: "settings", counter: null })}>
           Add
         </button>
       </footer>
       {modal?.kind === "settings" && (
         <SettingsModal counter={modal.counter} onSave={saveCounter} onDelete={deleteCounter} onClose={closeModal} />
+      )}
+      {modal?.kind === "backup" && (
+        <BackupModal counters={counters} onImport={importCounters} onClose={closeModal} />
       )}
     </div>
   )
