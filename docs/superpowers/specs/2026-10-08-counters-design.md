@@ -74,9 +74,12 @@ Validation: the file must parse as a JSON array, and every item must match `Coun
 ## Display
 
 - Elapsed time = `max(0, now - start)`.
-- `days`: `floor(elapsed / 86_400_000)`, shown as `42 days` (`1 day` when singular).
-- `seconds`: `floor(elapsed / 1000)`, thousands separators, shown as `3,628,800 s`.
-- `centiseconds`: `floor(elapsed / 10)`, thousands separators, shown as `362,880,000 cs`.
+- Format: `Nd HH:MM:SS.cc`. The unit sets where the display stops; each part truncates, never rounds.
+  - `days`: `1d`
+  - `seconds`: `1d 02:09:01`
+  - `centiseconds`: `1d 02:09:01.34`
+- The day count has no padding and shows `0d` under one day. Hours, minutes, seconds and centiseconds pad to two digits.
+- Centiseconds use a thinner font weight. All digits use `font-variant-numeric: tabular-nums`, so the text does not shift as it ticks.
 - Over the limit: `limitDays > 0` and `elapsed > limitDays × 86_400_000`. The counter text flashes red with a CSS animation.
 
 ### Clock
