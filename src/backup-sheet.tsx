@@ -1,16 +1,17 @@
 import { useRef, useState, type ChangeEvent, type JSX } from "react"
 import { downloadCounters, parseCounters } from "./backup"
+import styles from "./backup-sheet.module.css"
+import buttons from "./buttons.module.css"
 import type { Counter } from "./counter"
-import { Modal } from "./modal"
-import styles from "./modal.module.css"
+import { Sheet } from "./sheet"
 
-type BackupModalProps = {
+type BackupSheetProps = {
   readonly counters: readonly Counter[]
   readonly onImport: (counters: readonly Counter[]) => void
   readonly onClose: () => void
 }
 
-export function BackupModal({ counters, onImport, onClose }: BackupModalProps): JSX.Element {
+export function BackupSheet({ counters, onImport, onClose }: BackupSheetProps): JSX.Element {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -31,12 +32,12 @@ export function BackupModal({ counters, onImport, onClose }: BackupModalProps): 
   }
 
   return (
-    <Modal title="Backup" onClose={onClose}>
-      <div className={styles.form}>
-        <button type="button" onClick={() => downloadCounters(counters)}>
+    <Sheet title="Backup" onClose={onClose}>
+      <div className={styles.actions}>
+        <button type="button" className={buttons.secondary} onClick={() => downloadCounters(counters)}>
           Export
         </button>
-        <button type="button" onClick={() => fileInputRef.current?.click()}>
+        <button type="button" className={buttons.secondary} onClick={() => fileInputRef.current?.click()}>
           Import
         </button>
         <input
@@ -47,12 +48,7 @@ export function BackupModal({ counters, onImport, onClose }: BackupModalProps): 
           onChange={(event) => void importFile(event)}
         />
         {error && <p className={styles.error}>{error}</p>}
-        <div className={styles.actions}>
-          <button type="button" onClick={onClose}>
-            Close
-          </button>
-        </div>
       </div>
-    </Modal>
+    </Sheet>
   )
 }

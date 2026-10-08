@@ -1,6 +1,6 @@
 # Counters
 
-Personal PWA that shows the time elapsed since events. Vite, React, TypeScript, pnpm. Data lives in the browser's `localStorage`; there is no backend. Design and plan: `docs/superpowers/`.
+Personal PWA that shows the time elapsed since events. Vite, React, TypeScript, pnpm. Data lives in the browser's `localStorage`; there is no backend. Visual design: `docs/design/design-spec.md` (its §10 decisions override the rest). First spec and plan: `docs/superpowers/`.
 
 ## Git
 
@@ -11,10 +11,10 @@ Personal PWA that shows the time elapsed since events. Vite, React, TypeScript, 
 ## Commands
 
 - `pnpm dev` — dev server on `localhost:5173`
-- `pnpm test` — Vitest unit tests on the pure logic in `src/counter.ts`, `src/datetime.ts`, `src/backup.ts`
+- `pnpm test` — Vitest unit tests on the pure logic (`counter`, `format`, `heat`, `palettes`, `datetime`, `backup`)
 - `pnpm lint` — oxlint
 - `pnpm build` — type-check, then build `dist` with the PWA manifest, icons and service worker
 
 ## Data contract
 
-The `localStorage` key `counters` and the export file hold the same JSON array of `Counter` (`src/counter.ts`). A change to that shape breaks existing backups and stored data, so keep `isCounter` accepting the old shape or add a migration.
+The `localStorage` key `counters` and the export file hold the same JSON array of `Counter` (`src/counter.ts`). `parseCounters` in `src/backup.ts` reads both stores and migrates the first format (`start`, `unit`, `limitDays`). A change to the shape breaks existing backups and stored data, so add its migration there.

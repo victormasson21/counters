@@ -1,38 +1,16 @@
 import { describe, expect, it } from "vitest"
-import { elapsedMs, formatElapsed, isOverLimit, type Counter } from "./counter"
+import { elapsedMs, goalProgress, isCounter, type Counter } from "./counter"
 
-const SECOND = 1_000
-const MINUTE = 60 * SECOND
-const HOUR = 60 * MINUTE
-const DAY = 24 * HOUR
-const ONE_DAY_TWO_HOURS_NINE_MINUTES = DAY + 2 * HOUR + 9 * MINUTE + SECOND + 349
+const DAY = 86_400_000
+const start = Date.UTC(2026, 9, 1)
 
-const counterWithLimit = (limitDays: number): Counter => ({
+const counterWithGoal = (goalDays: number | null): Counter => ({
   id: "id",
   title: "Coffee",
-  start: 0,
-  unit: "days",
-  limitDays,
-})
-
-describe("formatElapsed", () => {
-  it("shows whole days with singular and plural wording", () => {
-    expect(formatElapsed(ONE_DAY_TWO_HOURS_NINE_MINUTES, "days")).toEqual({ text: "1 day", centiseconds: null })
-    expect(formatElapsed(12 * DAY + 5, "days")).toEqual({ text: "12 days", centiseconds: null })
-    expect(formatElapsed(DAY - 1, "days")).toEqual({ text: "0 days", centiseconds: null })
-  })
-
-  it("stops at seconds for the seconds unit", () => {
-    expect(formatElapsed(ONE_DAY_TWO_HOURS_NINE_MINUTES, "seconds")).toEqual({ text: "1d 02:09:01", centiseconds: null })
-  })
-
-  it("truncates centiseconds", () => {
-    expect(formatElapsed(ONE_DAY_TWO_HOURS_NINE_MINUTES, "centiseconds")).toEqual({ text: "1d 02:09:01", centiseconds: "34" })
-  })
-
-  it("pads every part under one day", () => {
-    expect(formatElapsed(5 * SECOND + 70, "centiseconds")).toEqual({ text: "0d 00:00:05", centiseconds: "07" })
-  })
+  startAt: new Date(start).toISOString(),
+  precision: "days",
+  goalDays,
+  palette: "ember",
 })
 
 describe("elapsedMs", () => {
@@ -45,16 +23,39 @@ describe("elapsedMs", () => {
   })
 })
 
-describe("isOverLimit", () => {
-  it("never flags a zero limit", () => {
-    expect(isOverLimit(counterWithLimit(0), 365 * DAY)).toBe(false)
+describe("goalProgress", () => {
+  it("is absent without a goal", () => {
+    expect(goalProgress(counterWithGoal(null), start + DAY)).toBeNull()
   })
 
-  it("does not flag exactly at the limit", () => {
-    expect(isOverLimit(counterWithLimit(3), 3 * DAY)).toBe(false)
+  it("counts whole days towards the goal", () => {
+    expect(goalProgress(counterWithGoal(30), start + 24.5 * DAY)).toEqual({ fraction: 24.5 / 30, days: 24, over: false })
   })
 
-  it("flags once past the limit", () => {
-    expect(isOverLimit(counterWithLimit(3), 3 * DAY + 1)).toBe(true)
+  it("is not over exactly at the goal", () => {
+    expect(goalProgress(counterWithGoal(7), start + 7 * DAY)).toEqual({ fraction: 1, days: 7, over: false })
+  })
+
+  it("caps the bar and flags the counter once past the goal", () => {
+    expect(goalProgress(counterWithGoal(7), start + 9 * DAY)).toEqual({ fraction: 1, days: 9, over: true })
+  })
+})
+
+describe("isCounter", () => {
+  const valid = counterWithGoal(30)
+
+  it("accepts a valid counter", () => {
+    expect(isCounter(valid)).toBe(true)
+  })
+
+  it.each([
+    ["an unreadable start", { ...valid, startAt: "soon" }],
+    ["an unknown precision", { ...valid, precision: "minutes" }],
+    ["a goal above 90", { ...valid, goalDays: 91 }],
+    ["a goal of 0", { ...valid, goalDays: 0 }],
+    ["a fractional goal", { ...valid, goalDays: 1.5 }],
+    ["an unknown palette", { ...valid, palette: "teal" }],
+  ])("rejects %s", (_label, value) => {
+    expect(isCounter(value)).toBe(false)
   })
 })

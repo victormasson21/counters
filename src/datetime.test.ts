@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { pad, startFromInput, toLocalDate, toLocalInputValue } from "./datetime"
+import { pad, startFromInput, toLocalDate, toLocalInputValue, toLocalTime } from "./datetime"
 
 const preciseStart = new Date(2026, 9, 8, 7, 5, 37, 120).getTime()
 
@@ -13,6 +13,13 @@ describe("pad", () => {
 describe("toLocalDate", () => {
   it("formats the local calendar date", () => {
     expect(toLocalDate(preciseStart)).toBe("2026-10-08")
+  })
+})
+
+describe("toLocalTime", () => {
+  it("uses a padded 24-hour clock", () => {
+    expect(toLocalTime(preciseStart)).toBe("07:05")
+    expect(toLocalTime(new Date(2026, 9, 8, 13, 46).getTime())).toBe("13:46")
   })
 })
 

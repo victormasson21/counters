@@ -1,58 +1,72 @@
 .card {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 0.25rem 1rem;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--card);
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  padding: 18px 8px 18px 20px;
+  border-radius: 22px;
+  cursor: pointer;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
 }
 
 .title {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.time {
-  grid-column: 1;
+.timer {
+  font-size: 34px;
+}
+
+.since {
   margin: 0;
-  font-size: 1.75rem;
-  font-weight: 600;
+  font-size: 13px;
+}
+
+.goal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+  padding-right: 12px;
+}
+
+.track {
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 6px;
+  border-radius: 3px;
+}
+
+.caption {
+  margin: 0;
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
-.centiseconds {
-  font-weight: 300;
-}
-
-.settings {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  border: none;
-  font-size: 1.25rem;
-  color: var(--muted);
-  background: none;
-}
-
 .over {
-  animation: flash 1s steps(1, end) infinite;
+  animation: pulse 1s steps(1, end) infinite;
 }
 
-@keyframes flash {
-  0% {
-    color: var(--alert);
-  }
+@keyframes pulse {
   50% {
-    color: var(--text);
+    opacity: 0.35;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .over {
     animation: none;
-    color: var(--alert);
   }
 }

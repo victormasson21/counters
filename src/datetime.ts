@@ -7,9 +7,13 @@ export function toLocalDate(ms: number): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
 }
 
-export function toLocalInputValue(ms: number): string {
+export function toLocalTime(ms: number): string {
   const date = new Date(ms)
-  return `${toLocalDate(ms)}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+export function toLocalInputValue(ms: number): string {
+  return `${toLocalDate(ms)}T${toLocalTime(ms)}`
 }
 
 export function startFromInput(value: string, previous: number): number {

@@ -1,0 +1,39 @@
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 56px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.primary {
+  border: 0;
+  font-size: 17px;
+  color: var(--surface);
+  background: var(--ink);
+}
+
+.secondary {
+  gap: 6px;
+  border: 1px solid var(--field-border);
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  color: inherit;
+  background: transparent;
+}

@@ -1,78 +1,111 @@
-import { useEffect, useState, type JSX } from "react"
+import { useEffect, useRef, useState, type JSX } from "react"
 import styles from "./app.module.css"
-import { BackupModal } from "./backup-modal"
+import { BackupSheet } from "./backup-sheet"
+import buttons from "./buttons.module.css"
 import type { Counter } from "./counter"
 import { CounterCard } from "./counter-card"
-import { SettingsModal } from "./settings-modal"
+import { CounterSheet } from "./counter-sheet"
+import { EmptyState } from "./empty-state"
+import { TICK_MS } from "./format"
+import { MoreIcon, PlusIcon } from "./icons"
+import { paletteAfter } from "./palettes"
 import { loadCounters, saveCounters } from "./storage"
 import { useNow } from "./use-now"
 
-const CENTISECOND_TICK_MS = 10
-const SECOND_TICK_MS = 1_000
+const MENU_ID = "app-menu"
 
-type ModalState =
-  | { readonly kind: "settings"; readonly counter: Counter | null }
+type SheetState =
+  | { readonly kind: "counter"; readonly counter: Counter | null }
   | { readonly kind: "backup" }
   | null
 
 export function App(): JSX.Element {
   const [counters, setCounters] = useState(loadCounters)
-  const [modal, setModal] = useState<ModalState>(null)
-  const showsCentiseconds = counters.some((counter) => counter.unit === "centiseconds")
-  const now = useNow(showsCentiseconds ? CENTISECOND_TICK_MS : SECOND_TICK_MS)
+  const [sheet, setSheet] = useState<SheetState>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const now = useNow(Math.min(...counters.map((counter) => TICK_MS[counter.precision]), TICK_MS.days))
 
   useEffect(() => saveCounters(counters), [counters])
 
-  const closeModal = (): void => setModal(null)
+  const closeSheet = (): void => setSheet(null)
 
   function saveCounter(saved: Counter): void {
     setCounters((current) =>
       current.some((counter) => counter.id === saved.id)
         ? current.map((counter) => (counter.id === saved.id ? saved : counter))
-        : [...current, saved],
+        : [saved, ...current],
     )
-    closeModal()
+    closeSheet()
   }
 
   function deleteCounter(id: string): void {
     setCounters((current) => current.filter((counter) => counter.id !== id))
-    closeModal()
+    closeSheet()
   }
 
   function importCounters(imported: readonly Counter[]): void {
     setCounters(imported)
-    closeModal()
+    closeSheet()
+  }
+
+  function openBackup(): void {
+    menuRef.current?.hidePopover()
+    setSheet({ kind: "backup" })
   }
 
   return (
     <div className={styles.app}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Counters</h1>
+        <button
+          type="button"
+          className={`${buttons.icon} ${styles.menuButton}`}
+          aria-label="Backup and settings"
+          popoverTarget={MENU_ID}
+        >
+          <MoreIcon />
+        </button>
+        <div ref={menuRef} id={MENU_ID} popover="auto" className={styles.menu}>
+          <button type="button" className={styles.menuItem} onClick={openBackup}>
+            Backup
+          </button>
+        </div>
+      </header>
       <main className={styles.list}>
         {counters.length === 0 ? (
-          <p className={styles.empty}>No counters yet. Tap Add to start one.</p>
+          <EmptyState />
         ) : (
           counters.map((counter) => (
             <CounterCard
               key={counter.id}
               counter={counter}
               now={now}
-              onOpenSettings={() => setModal({ kind: "settings", counter })}
+              onEdit={() => setSheet({ kind: "counter", counter })}
             />
           ))
         )}
       </main>
       <footer className={styles.footer}>
-        <button type="button" className={styles.backup} onClick={() => setModal({ kind: "backup" })}>
-          Backup
-        </button>
-        <button type="button" className={styles.add} onClick={() => setModal({ kind: "settings", counter: null })}>
-          Add
+        <button
+          type="button"
+          className={`${buttons.primary} ${styles.add}`}
+          onClick={() => setSheet({ kind: "counter", counter: null })}
+        >
+          <PlusIcon />
+          New counter
         </button>
       </footer>
-      {modal?.kind === "settings" && (
-        <SettingsModal counter={modal.counter} onSave={saveCounter} onDelete={deleteCounter} onClose={closeModal} />
+      {sheet?.kind === "counter" && (
+        <CounterSheet
+          counter={sheet.counter}
+          defaultPalette={paletteAfter(counters[0]?.palette)}
+          onSave={saveCounter}
+          onDelete={deleteCounter}
+          onClose={closeSheet}
+        />
       )}
-      {modal?.kind === "backup" && (
-        <BackupModal counters={counters} onImport={importCounters} onClose={closeModal} />
+      {sheet?.kind === "backup" && (
+        <BackupSheet counters={counters} onImport={importCounters} onClose={closeSheet} />
       )}
     </div>
   )
