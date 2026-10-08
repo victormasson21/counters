@@ -322,3 +322,4 @@ These override the sections above where they differ.
 7. **Swipe down to close:** not built. X and a tap on the scrim close the sheet.
 8. **Backup:** opens as a bottom sheet in the same pattern as New and Edit.
 9. **Font:** Geist is bundled with the app, so it works offline.
+10. **Countdown:** a future start counts down with a `-` prefix (`-37 days`) and reads `Until Thu 24 Dec`. The heat is reversed, `1 - intensity(days left)`, so the card warms as the date nears. The goal block hides until the date passes. After the date, the counter counts up as usual.

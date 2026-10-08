@@ -1,6 +1,6 @@
 import type { JSX } from "react"
 import buttons from "./buttons.module.css"
-import { elapsedMs, goalProgress, MS_PER_DAY, startMs, type Counter } from "./counter"
+import { goalProgress, MS_PER_DAY, startMs, type Counter } from "./counter"
 import styles from "./counter-card.module.css"
 import { ElapsedText } from "./elapsed-text"
 import { sinceLabel } from "./format"
@@ -16,7 +16,7 @@ type CounterCardProps = {
 
 export function CounterCard({ counter, now, onEdit }: CounterCardProps): JSX.Element {
   const start = startMs(counter)
-  const elapsed = elapsedMs(start, now)
+  const elapsed = now - start
   const style = cardStyle(paletteById(counter.palette).stops, elapsed / MS_PER_DAY)
   const goal = goalProgress(counter, now)
   const goalColor = goal?.over ? style.alertColor : style.color

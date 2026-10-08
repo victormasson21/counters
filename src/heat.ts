@@ -57,7 +57,7 @@ export function intensity(days: number): number {
 }
 
 export function cardStyle(stops: PaletteStops, days: number): CardStyle {
-  const t = intensity(days)
+  const t = days < 0 ? 1 - intensity(-days) : intensity(days)
   const mid = ramp(stops, t)
   const edge = ramp(stops, t * EDGE_SHARE)
   const dark = luminance(ramp(stops, t * BODY_SHARE)) < DARK_LUMINANCE

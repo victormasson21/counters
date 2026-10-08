@@ -56,15 +56,12 @@ export function startMs(counter: Counter): number {
   return Date.parse(counter.startAt)
 }
 
-export function elapsedMs(start: number, now: number): number {
-  return Math.max(0, now - start)
-}
-
 export function goalProgress(counter: Counter, now: number): GoalProgress | null {
-  if (counter.goalDays === null) {
+  const start = startMs(counter)
+  if (counter.goalDays === null || now < start) {
     return null
   }
-  const elapsed = elapsedMs(startMs(counter), now)
+  const elapsed = now - start
   const goalMs = counter.goalDays * MS_PER_DAY
   return {
     fraction: Math.min(1, elapsed / goalMs),

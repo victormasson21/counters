@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { elapsedMs, goalProgress, isCounter, type Counter } from "./counter"
+import { goalProgress, isCounter, type Counter } from "./counter"
 
 const DAY = 86_400_000
 const start = Date.UTC(2026, 9, 1)
@@ -13,19 +13,13 @@ const counterWithGoal = (goalDays: number | null): Counter => ({
   palette: "ember",
 })
 
-describe("elapsedMs", () => {
-  it("measures from start to now", () => {
-    expect(elapsedMs(1_000, 4_500)).toBe(3_500)
-  })
-
-  it("is zero for a start in the future", () => {
-    expect(elapsedMs(10_000, 4_500)).toBe(0)
-  })
-})
-
 describe("goalProgress", () => {
   it("is absent without a goal", () => {
     expect(goalProgress(counterWithGoal(null), start + DAY)).toBeNull()
+  })
+
+  it("is absent until the start date passes", () => {
+    expect(goalProgress(counterWithGoal(30), start - DAY)).toBeNull()
   })
 
   it("counts whole days towards the goal", () => {

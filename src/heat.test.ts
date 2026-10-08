@@ -42,4 +42,10 @@ describe("cardStyle", () => {
   it("reports the intensity as a whole percentage", () => {
     expect(cardStyle(ember, 7).intensityPct).toBe(62)
   })
+
+  it("warms up as a countdown gets closer", () => {
+    expect(cardStyle(ember, -37).intensityPct).toBe(20)
+    expect(cardStyle(ember, -1).intensityPct).toBe(62)
+    expect(cardStyle(ember, -0.001).intensityPct).toBe(98)
+  })
 })

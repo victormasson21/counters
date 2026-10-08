@@ -31,6 +31,15 @@ describe("formatElapsed", () => {
   })
 })
 
+describe("formatElapsed before the start", () => {
+  it("prefixes the time left with a minus", () => {
+    expect(formatElapsed(-(37 * DAY + HOUR), "days")).toEqual({ main: "-37", suffix: " days" })
+    expect(formatElapsed(-SEVEN_DAYS_FIVE_HOURS, "seconds")).toEqual({ main: "-7d 05:07:48", suffix: "" })
+    expect(formatElapsed(-FOUR_HOURS, "centis")).toEqual({ main: "-04:06:09", suffix: ".03" })
+    expect(formatElapsed(-FOUR_HOURS, "hours")).toEqual({ main: "-4h", suffix: " 6m" })
+  })
+})
+
 describe("sinceLabel", () => {
   const now = new Date(2026, 9, 8, 15, 0).getTime()
 
@@ -46,6 +55,12 @@ describe("sinceLabel", () => {
 
   it("adds the year for earlier years", () => {
     expect(sinceLabel(new Date(2025, 5, 2, 8, 40).getTime(), now, "centis")).toBe("Since Mon 2 Jun 2025, 08:40")
+  })
+
+  it("counts down to a future date", () => {
+    expect(sinceLabel(new Date(2026, 11, 24, 9, 0).getTime(), now, "seconds")).toBe("Until Thu 24 Dec, 09:00")
+    expect(sinceLabel(new Date(2026, 11, 24).getTime(), now, "days")).toBe("Until Thu 24 Dec")
+    expect(sinceLabel(new Date(2026, 9, 8, 18, 0).getTime(), now, "hours")).toBe("Until today, 18:00")
   })
 })
 

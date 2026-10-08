@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type JSX } from "react"
 import buttons from "./buttons.module.css"
-import { elapsedMs, MAX_GOAL_DAYS, MS_PER_DAY, PRECISIONS, startMs, type Counter, type Precision } from "./counter"
+import { MAX_GOAL_DAYS, MS_PER_DAY, PRECISIONS, startMs, type Counter, type Precision } from "./counter"
 import styles from "./counter-sheet.module.css"
 import { startFromInput, toLocalDate, toLocalTime } from "./datetime"
 import { ElapsedText } from "./elapsed-text"
@@ -90,7 +90,7 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
     }
   }
 
-  const elapsed = elapsedMs(start, now)
+  const elapsed = now - start
   const preview = cardStyle(stops, elapsed / MS_PER_DAY)
 
   return (

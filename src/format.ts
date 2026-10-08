@@ -27,19 +27,21 @@ function dayLabel(ms: number): string {
 }
 
 export function formatElapsed(elapsed: number, precision: Precision): FormattedElapsed {
-  const days = Math.floor(elapsed / MS_PER_DAY)
-  const hours = Math.floor((elapsed % MS_PER_DAY) / MS_PER_HOUR)
-  const minutes = Math.floor((elapsed % MS_PER_HOUR) / MS_PER_MINUTE)
-  const seconds = Math.floor((elapsed % MS_PER_MINUTE) / MS_PER_SECOND)
-  const centiseconds = Math.floor((elapsed % MS_PER_SECOND) / MS_PER_CENTISECOND)
+  const sign = elapsed < 0 ? "-" : ""
+  const size = Math.abs(elapsed)
+  const days = Math.floor(size / MS_PER_DAY)
+  const hours = Math.floor((size % MS_PER_DAY) / MS_PER_HOUR)
+  const minutes = Math.floor((size % MS_PER_HOUR) / MS_PER_MINUTE)
+  const seconds = Math.floor((size % MS_PER_MINUTE) / MS_PER_SECOND)
+  const centiseconds = Math.floor((size % MS_PER_SECOND) / MS_PER_CENTISECOND)
   const dayPrefix = days > 0 ? `${days}d ` : ""
-  const clock = `${dayPrefix}${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+  const clock = `${sign}${dayPrefix}${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
 
   switch (precision) {
     case "days":
-      return { main: String(days), suffix: days === 1 ? " day" : " days" }
+      return { main: `${sign}${days}`, suffix: days === 1 ? " day" : " days" }
     case "hours":
-      return { main: `${dayPrefix}${hours}h`, suffix: ` ${minutes}m` }
+      return { main: `${sign}${dayPrefix}${hours}h`, suffix: ` ${minutes}m` }
     case "seconds":
       return { main: clock, suffix: "" }
     case "centis":
@@ -53,9 +55,10 @@ export function dateLabel(ms: number): string {
 
 export function sinceLabel(start: number, now: number, precision: Precision): string {
   const withTime = (label: string): string => (precision === "days" ? label : `${label}, ${toLocalTime(start)}`)
+  const upcoming = start > now
   if (toLocalDate(start) === toLocalDate(now)) {
-    return withTime("Started today")
+    return withTime(upcoming ? "Until today" : "Started today")
   }
   const sameYear = new Date(start).getFullYear() === new Date(now).getFullYear()
-  return withTime(`Since ${sameYear ? dayLabel(start) : dateLabel(start)}`)
+  return withTime(`${upcoming ? "Until" : "Since"} ${sameYear ? dayLabel(start) : dateLabel(start)}`)
 }
