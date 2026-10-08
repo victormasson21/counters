@@ -48,6 +48,11 @@
   cursor: pointer;
 }
 
+.picker:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
 .datePicker {
   flex: 1.4;
   justify-content: flex-start;

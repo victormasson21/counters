@@ -127,6 +127,7 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
                 className={styles.nativePicker}
                 aria-label="Start date"
                 value={toLocalDate(start)}
+                onClick={(event) => event.currentTarget.showPicker()}
                 onChange={(event) => changeStart(event.target.value, toLocalTime(start))}
               />
             </label>
@@ -137,6 +138,7 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
                 className={styles.nativePicker}
                 aria-label="Start time"
                 value={toLocalTime(start)}
+                onClick={(event) => event.currentTarget.showPicker()}
                 onChange={(event) => changeStart(toLocalDate(start), event.target.value)}
               />
             </label>
