@@ -1,0 +1,58 @@
+.card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.time {
+  grid-column: 1;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.centiseconds {
+  font-weight: 300;
+}
+
+.settings {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--muted);
+  background: none;
+}
+
+.over {
+  animation: flash 1s steps(1, end) infinite;
+}
+
+@keyframes flash {
+  0% {
+    color: var(--alert);
+  }
+  50% {
+    color: var(--text);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .over {
+    animation: none;
+    color: var(--alert);
+  }
+}
