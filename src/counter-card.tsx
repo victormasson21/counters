@@ -8,7 +8,6 @@ import { sinceLabel } from "./format"
 import { PencilIcon } from "./icons"
 import { growth, shapeAt } from "./shape"
 
-const GOAL_CELLS = 10
 const SHAPE_MIN = 56
 const SHAPE_MAX = 200
 
@@ -23,7 +22,6 @@ export function CounterCard({ counter, index, now, onEdit }: CounterCardProps): 
   const start = startMs(counter)
   const elapsed = now - start
   const goal = goalProgress(counter, now)
-  const filled = goal ? Math.floor(goal.fraction * GOAL_CELLS) : 0
 
   return (
     <article className={styles.card} onClick={onEdit}>
@@ -44,10 +42,8 @@ export function CounterCard({ counter, index, now, onEdit }: CounterCardProps): 
         <p className={styles.since}>{sinceLabel(start, now, counter.precision)}</p>
         {goal && (
           <div className={goal.over ? `${styles.goal} ${styles.over}` : styles.goal}>
-            <div className={styles.cells} aria-hidden="true">
-              {Array.from({ length: GOAL_CELLS }, (_, cell) => (
-                <span key={cell} className={cell < filled ? `${styles.cell} ${styles.done}` : styles.cell} />
-              ))}
+            <div className={styles.track} aria-hidden="true">
+              <div className={styles.fill} style={{ width: `${goal.fraction * 100}%` }} />
             </div>
             <p className={styles.caption} aria-label={`${goal.days} of ${counter.goalDays} days`}>
               {goal.days}/{counter.goalDays}

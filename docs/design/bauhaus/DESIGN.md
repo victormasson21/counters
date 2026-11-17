@@ -113,7 +113,7 @@ Remove `palette` from `Counter`. Colour and shape are derived from list position
   - the title row: UPPERCASE title, plus a pencil button at its right end, 44 px wide
   - the timer
   - the "Since …" line
-  - a goal block, if a goal is set: 10 square cells with a 2 px gap, filled `ink` for progress and `rgba(20,20,20,.12)` for the rest, followed by `24/30`
+  - a goal block, if a goal is set: a continuous 8 px bar (square ends, track `rgba(20,20,20,.12)`) filled `ink` to the exact percentage of the goal elapsed, followed by `24/30`
 - **Footer:** a 4 px rule above it. A full-width `ink` button, 58 px high, reading "NEW COUNTER", with a 22 px red circle holding a paper-coloured plus.
 
 ### 6.2 Empty (`BauhausA-Empty.dc.html`)
@@ -163,7 +163,7 @@ Same sheet pattern. Top to bottom:
 The current app (tag `v1-heat-gradient`) has behaviour this redesign must keep. Re-skin it as follows:
 
 1. **Countdown:** a future start still counts down with a `-` prefix and reads `Until Thu 24 Dec`. The shape grows *as the date nears*: `t = 1 − intensity(days left)`, using the one-year span, the same reversal the heat gradient used. The goal block stays hidden until the date passes. After the date, the counter counts up as usual and the goal rule in §4 applies.
-2. **Past goal:** the goal cells and caption (`34/30`) pulse in `danger` red. Reduced motion shows solid red. The shape stays at full size.
+2. **Past goal:** the goal bar and caption (`34/30`) pulse in `danger` red. Reduced motion shows solid red. The shape stays at full size.
 3. **Goal range:** Custom accepts whole days 1–90 (`MAX_GOAL_DAYS`).
 4. **Order:** newest first, so a new counter goes to the top and the colour cycle shifts. The info strip in New counter therefore shows the pair for **index 0**, and every existing card moves one step along the cycle.
 5. **Font:** bundle Jost through `@fontsource/jost` (weights 400/500/600/700) so it works offline, the way Geist is bundled today. Remove Geist.

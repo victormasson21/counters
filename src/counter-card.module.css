@@ -56,19 +56,14 @@
   margin-top: 6px;
 }
 
-.cells {
-  display: grid;
+.track {
   flex: 1;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
-  gap: 2px;
-}
-
-.cell {
   height: 8px;
   background: var(--track);
 }
 
-.done {
+.fill {
+  height: 100%;
   background: var(--ink);
 }
 
@@ -79,12 +74,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-.over .done,
+.over .fill,
 .over .caption {
   animation: pulse 1s steps(1, end) infinite;
 }
 
-.over .done {
+.over .fill {
   background: var(--danger);
 }
 
@@ -99,7 +94,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .over .done,
+  .over .fill,
   .over .caption {
     animation: none;
   }
