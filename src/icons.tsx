@@ -35,14 +35,6 @@ export function MenuIcon(): JSX.Element {
   )
 }
 
-export function PencilIcon(): JSX.Element {
-  return (
-    <Icon size={18}>
-      <path d="M4 20h4L19 9l-4-4L4 16v4z" />
-    </Icon>
-  )
-}
-
 /** The plus in a red dot, used on the New counter button. */
 export function AddDot(): JSX.Element {
   return (

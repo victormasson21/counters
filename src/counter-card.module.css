@@ -5,22 +5,13 @@
   padding: 12px 16px 16px;
   border: var(--border);
   background: var(--card);
-  cursor: pointer;
 }
 
 .body {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
   max-width: 222px;
-}
-
-.titleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
 }
 
 .title {
@@ -34,9 +25,30 @@
   white-space: nowrap;
 }
 
-.edit {
-  height: 32px;
-  margin: -6px -10px -6px 0;
+.open {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.open:focus-visible {
+  outline: none;
+}
+
+.open:focus-visible::after {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
 }
 
 .timer {

@@ -110,7 +110,7 @@ Remove `palette` from `Counter`. Colour and shape are derived from list position
 - **Header:** a three-shape mark (blue circle, red square, yellow triangle, 14 px each), then "counters". A 44 px menu button (three bars) on the right opens a menu containing Backup. A 4 px rule sits under the header.
 - **Card:** 2 px border, `card` fill, min-height 124 px, padding 12/16/16. It contains:
   - the shape (§3 and §4)
-  - the title row: UPPERCASE title, plus a pencil button at its right end, 44 px wide
+  - the UPPERCASE title. There is no edit icon: the title is a button stretched over the whole card (`::after`, `inset: 0`), so tapping anywhere opens Edit and keyboard users can still reach it. Its focus ring outlines the whole card
   - the timer
   - the "Since …" line
   - a goal block, if a goal is set: a continuous 8 px bar (square ends, track `rgba(20,20,20,.12)`) filled `ink` to the exact percentage of the goal elapsed, followed by `24/30`

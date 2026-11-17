@@ -1,11 +1,9 @@
 import type { JSX } from "react"
-import buttons from "./buttons.module.css"
 import { goalProgress, startMs, type Counter } from "./counter"
 import styles from "./counter-card.module.css"
 import { CounterShapeArt } from "./counter-shape"
 import { ElapsedText } from "./elapsed-text"
 import { sinceLabel } from "./format"
-import { PencilIcon } from "./icons"
 import { growth, shapeAt } from "./shape"
 
 const SHAPE_MIN = 56
@@ -24,7 +22,7 @@ export function CounterCard({ counter, index, now, onEdit }: CounterCardProps): 
   const goal = goalProgress(counter, now)
 
   return (
-    <article className={styles.card} onClick={onEdit}>
+    <article className={styles.card}>
       <CounterShapeArt
         shape={shapeAt(index)}
         t={growth(elapsed, counter.goalDays)}
@@ -32,12 +30,12 @@ export function CounterCard({ counter, index, now, onEdit }: CounterCardProps): 
         maxSize={SHAPE_MAX}
       />
       <div className={styles.body}>
-        <div className={styles.titleRow}>
-          <h2 className={styles.title}>{counter.title}</h2>
-          <button type="button" className={`${buttons.icon} ${styles.edit}`} aria-label="Edit counter" onClick={onEdit}>
-            <PencilIcon />
+        <h2 className={styles.title}>
+          {/* Stretched over the whole card, so tapping anywhere opens the editor. */}
+          <button type="button" className={styles.open} aria-label={`Edit ${counter.title}`} onClick={onEdit}>
+            {counter.title}
           </button>
-        </div>
+        </h2>
         <ElapsedText elapsed={elapsed} precision={counter.precision} className={styles.timer} />
         <p className={styles.since}>{sinceLabel(start, now, counter.precision)}</p>
         {goal && (
