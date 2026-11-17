@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Counters – Bauhaus edit counter</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button,input{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #EFE8D8; font-family: 'Jost', system-ui, sans-serif; color: #141414; position: relative; overflow: hidden">
+  <div style="padding: 26px 20px 14px; font-size: 30px; font-weight: 700; border-bottom: 4px solid #141414">counters</div>
+  <div style="position: absolute; inset: 0; background: rgba(20, 20, 20, 0.5)"></div>
+  <section aria-label="Edit counter" style="position: absolute; left: 0; right: 0; bottom: 0; background: #EFE8D8; border-top: 4px solid #141414; padding: 14px 20px 24px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.01em">edit counter</h2>
+      <button aria-label="Close" style="width: 44px; height: 44px; margin-right: -10px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #141414">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+    </div>
+    <div style="position: relative; overflow: hidden; border: 2px solid #141414; background: #F8F3E8; height: 108px; padding: 12px 16px; box-sizing: border-box">
+      <svg aria-hidden="true" viewBox="0 0 100 100" style="position: absolute; width: {{s}}; height: {{s}}; right: {{right}}; top: {{top}}"><path d="M0 0H100V100H0Z" fill="#D2382B"></path></svg>
+      <div style="position: relative; max-width: 222px; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Test one two</span>
+        <span style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; white-space: nowrap">47d 05:08:49<span style="font-weight: 400">.37</span></span>
+        <span style="font-size: 13px; color: #3F3A31">{{sizeNote}}</span>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="e-name" style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Name</label>
+      <input id="e-name" defaultValue="Test one two" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 2px solid #141414; border-radius: 0; background: #F8F3E8; font-size: 17px; color: #141414">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Started</span>
+      <div style="display: flex; gap: 8px">
+        <button style="flex: 1.4; height: 48px; border: 2px solid #141414; background: #F8F3E8; font-size: 16px; color: #141414; text-align: left; padding: 0 14px">Thu 1 Oct 2026</button>
+        <button style="flex: 1; height: 48px; border: 2px solid #141414; background: #F8F3E8; font-size: 16px; color: #141414; font-variant-numeric: tabular-nums">08:40</button>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Precision</span>
+      <div role="radiogroup" aria-label="Precision" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 2px solid #141414">
+        <button role="radio" aria-checked="false" style="height: 42px; border: 0; background: #F8F3E8; color: #141414; font-size: 15px; font-weight: 600">Days</button>
+        <button role="radio" aria-checked="false" style="height: 42px; border: 0; border-left: 2px solid #141414; background: #F8F3E8; color: #141414; font-size: 15px; font-weight: 600">Hours</button>
+        <button role="radio" aria-checked="false" style="height: 42px; border: 0; border-left: 2px solid #141414; background: #F8F3E8; color: #141414; font-size: 15px; font-weight: 600">Secs</button>
+        <button role="radio" aria-checked="true" style="height: 42px; border: 0; border-left: 2px solid #141414; background: #141414; color: #EFE8D8; font-size: 15px; font-weight: 600">1/100</button>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Goal <span style="font-weight: 400; letter-spacing: 0.04em; text-transform: none; color: #3F3A31">· try one: the shape above resizes</span></span>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <sc-for list="{{goals}}" as="g" hint-placeholder-count="5">
+          <button aria-pressed="{{g.on}}" onClick="{{g.pick}}" style="height: 42px; padding: 0 14px; border: 2px solid #141414; background: {{g.bg}}; color: {{g.fg}}; font-size: 15px; font-weight: 600">{{g.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display: flex; gap: 8px; margin-top: 2px">
+      <button aria-label="Delete counter" style="width: 58px; height: 58px; flex: none; border: 2px solid #B42318; background: #F8F3E8; color: #B42318; display: flex; align-items: center; justify-content: center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"></path></svg>
+      </button>
+      <button style="flex: 1; height: 58px; border: 2px solid #141414; background: #F8F3E8; color: #141414; font-size: 15px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase">Restart</button>
+      <button style="flex: 1.4; height: 58px; border: 0; background: #141414; color: #EFE8D8; font-size: 15px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase">Save</button>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const goal = (this.state && this.state.goal != null) ? this.state.goal : 60;
+    const days = 47.2;
+    const span = goal || 365;
+    const t = Math.min(1, Math.pow(Math.log(1 + days) / Math.log(1 + span), 0.456));
+    const s = Math.round(48 + t * 112);
+    const goals = [['None', 0], ['7 days', 7], ['30 days', 30], ['60 days', 60], ['90 days', 90]].map((g) => ({
+      label: g[0], on: g[1] === goal, bg: g[1] === goal ? '#141414' : '#F8F3E8', fg: g[1] === goal ? '#EFE8D8' : '#141414',
+      pick: () => this.setState({ goal: g[1] })
+    }));
+    return {
+      goals,
+      s: s + 'px', right: Math.round(-0.42 * s) + 'px', top: Math.round(-0.28 * s) + 'px',
+      sizeNote: (goal ? 'Goal ' + goal + ' days' : 'No goal, full at 1 year') + ' · ' + Math.round(t * 100) + '% size'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Counters – Bauhaus variant A</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #EFE8D8; font-family: 'Jost', system-ui, sans-serif; color: #141414; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 26px 8px 14px 20px; border-bottom: 4px solid #141414">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <div aria-hidden="true" style="display: flex; align-items: flex-end; gap: 4px">
+        <span style="width: 14px; height: 14px; border-radius: 7px; background: #D2382B"></span>
+        <svg width="15" height="14" viewBox="0 0 15 14"><path d="M7.5 0L15 14H0Z" fill="#F2B300"></path></svg>
+        <span style="width: 13px; height: 13px; background: #1F4FA3"></span>
+      </div>
+      <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.01em; line-height: 1">counters</h1>
+    </div>
+    <button aria-label="Backup and settings" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #141414">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+    </button>
+  </header>
+  <main style="flex: 1; overflow: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+    <sc-for list="{{counters}}" as="c" hint-placeholder-count="4">
+      <article style="position: relative; overflow: hidden; border: 2px solid #141414; background: #F8F3E8; min-height: 124px; padding: 12px 16px 16px; box-sizing: border-box">
+        <svg aria-hidden="true" viewBox="0 0 100 100" style="position: absolute; width: {{c.s}}; height: {{c.s}}; right: {{c.right}}; top: {{c.top}}"><path d="{{c.d}}" fill="{{c.col}}"></path></svg>
+        <div style="position: relative; max-width: 222px; display: flex; flex-direction: column; gap: 4px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.title}}</span>
+            <button aria-label="Edit counter" style="width: 44px; height: 32px; margin: -6px -10px -6px 0; flex: none; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #141414">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path></svg>
+            </button>
+          </div>
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap">{{c.big}}<span style="font-weight: 400">{{c.small}}</span></div>
+          <span style="font-size: 13px; color: #4A453B">{{c.since}}</span>
+          <sc-if value="{{c.hasGoal}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px">
+              <div style="flex: 1; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 2px">
+                <sc-for list="{{c.cells}}" as="g" hint-placeholder-count="10"><span style="height: 8px; background: {{g.bg}}"></span></sc-for>
+              </div>
+              <span style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums">{{c.goalText}}</span>
+            </div>
+          </sc-if>
+        </div>
+      </article>
+    </sc-for>
+  </main>
+  <footer style="padding: 12px 16px 28px; border-top: 4px solid #141414">
+    <button style="width: 100%; height: 58px; border: 0; background: #141414; color: #EFE8D8; font-size: 17px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 12px">
+      <span aria-hidden="true" style="width: 22px; height: 22px; border-radius: 11px; background: #D2382B; display: flex; align-items: center; justify-content: center">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#EFE8D8" stroke-width="2.2"><path d="M6 1v10M1 6h10"></path></svg>
+      </span>
+      New counter
+    </button>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() { this.t = setInterval(() => this.setState({ now: Date.now() }), 50); }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const now = (this.state && this.state.now) || Date.now();
+    if (!this.fresh) this.fresh = Date.now() - 3 * 36e5 - 12 * 6e4;
+    const COL = { red: '#D2382B', yellow: '#F2B300', blue: '#1F4FA3', black: '#141414' };
+    const SHAPE = { circle: 'M50 0A50 50 0 1 1 49.99 0Z', tri: 'M50 0L100 100H0Z', square: 'M0 0H100V100H0Z', half: 'M0 100A50 50 0 0 1 100 100Z' };
+    const p = (n) => String(n).padStart(2, '0');
+    const fmt = (ms, unit) => {
+      const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60, s = Math.floor(ms / 1e3) % 60, cs = Math.floor(ms / 10) % 100;
+      if (unit === 'cs') return [d + 'd ' + p(h) + ':' + p(m) + ':' + p(s), '.' + p(cs), d];
+      if (unit === 's') return [(d ? d + 'd ' : '') + p(h) + ':' + p(m) + ':' + p(s), '', d];
+      if (unit === 'h') return [d + 'd ' + h + 'h', ' ' + m + 'm', d];
+      return [String(d), d === 1 ? ' day' : ' days', d];
+    };
+    const list = [
+      { title: 'New gym routine', start: this.fresh, unit: 's', since: 'Started today, 10:34', goal: 0 },
+      { title: 'Test one two', start: new Date(2026, 9, 1, 8, 40).getTime(), unit: 'cs', since: 'Since Thu 1 Oct, 08:40', goal: 60 },
+      { title: 'Project kickoff', start: new Date(2026, 8, 14, 9, 0).getTime(), unit: 'h', since: 'Since Mon 14 Sep, 09:00', goal: 90 },
+      { title: 'Alcohol-free', start: new Date(2025, 9, 20).getTime(), unit: 'd', since: 'Since Mon 20 Oct 2025', goal: 0 },
+      { title: 'Daily walk streak', start: new Date(2026, 10, 3).getTime(), unit: 'd', since: 'Since Tue 3 Nov', goal: 14 }
+    ];
+    // Colour + shape come from list position, so neighbours always differ (Kandinsky pairings).
+    const SEQ = [['blue', 'circle'], ['red', 'square'], ['yellow', 'tri'], ['black', 'half']];
+    const counters = list.map((c, i) => {
+      c.col = SEQ[i % 4][0]; c.shape = SEQ[i % 4][1];
+      const ms = Math.max(0, now - c.start);
+      const span = c.goal || 365;
+      const t = Math.min(1, Math.pow(Math.log(1 + ms / 864e5) / Math.log(1 + span), 0.456));
+      const s = Math.round(56 + t * 144);
+      const f = fmt(ms, c.unit);
+      const done = c.goal ? Math.min(10, Math.floor((ms / (c.goal * 864e5)) * 10)) : 0;
+      return {
+        title: c.title, big: f[0], small: f[1], since: c.since,
+        d: SHAPE[c.shape], col: COL[c.col],
+        s: s + 'px', right: Math.round(-0.42 * s) + 'px', top: Math.round(-0.28 * s) + 'px',
+        hasGoal: !!c.goal,
+        cells: Array.from({ length: 10 }, (_, i) => ({ bg: i < done ? '#141414' : 'rgba(20,20,20,0.12)' })),
+        goalText: c.goal ? f[2] + '/' + c.goal : ''
+      };
+    });
+    return { counters };
+  }
+}
+</script>
+</body>
+</html>
