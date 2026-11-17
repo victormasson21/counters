@@ -53,12 +53,15 @@ button,input{font-family:inherit}
       </div>
     </div>
     <div style="display: flex; flex-direction: column; gap: 6px">
-      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Goal <span style="font-weight: 400; letter-spacing: 0.04em; text-transform: none; color: #3F3A31">· try one: the shape above resizes</span></span>
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Goal <span style="font-weight: 400; letter-spacing: 0.04em; text-transform: none; color: #3F3A31">· optional, sets when the shape is full size</span></span>
       <div style="display: flex; gap: 8px; flex-wrap: wrap">
         <sc-for list="{{goals}}" as="g" hint-placeholder-count="5">
-          <button aria-pressed="{{g.on}}" onClick="{{g.pick}}" style="height: 42px; padding: 0 14px; border: 2px solid #141414; background: {{g.bg}}; color: {{g.fg}}; font-size: 15px; font-weight: 600">{{g.label}}</button>
+          <button aria-pressed="{{g.on}}" onClick="{{g.pick}}" style="height: 42px; padding: 0 14px; border: 2px {{g.border}} #141414; background: {{g.bg}}; color: {{g.fg}}; font-size: 15px; font-weight: 600">{{g.label}}</button>
         </sc-for>
       </div>
+      <sc-if value="{{isCustom}}" hint-placeholder-val="{{ true }}">
+        <input aria-label="Goal in days" defaultValue="60" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 2px solid #141414; border-radius: 0; background: #F8F3E8; font-size: 17px; color: #141414">
+      </sc-if>
     </div>
     <div style="display: flex; gap: 8px; margin-top: 2px">
       <button aria-label="Delete counter" style="width: 58px; height: 58px; flex: none; border: 2px solid #B42318; background: #F8F3E8; color: #B42318; display: flex; align-items: center; justify-content: center">
@@ -73,17 +76,19 @@ button,input{font-family:inherit}
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
 class Component extends DCLogic {
   renderVals() {
-    const goal = (this.state && this.state.goal != null) ? this.state.goal : 60;
+    const choice = (this.state && this.state.goal != null) ? this.state.goal : 'custom';
+    const goal = choice === 'custom' ? 60 : choice;
     const days = 47.2;
     const span = goal || 365;
     const t = Math.min(1, Math.pow(Math.log(1 + days) / Math.log(1 + span), 0.456));
     const s = Math.round(48 + t * 112);
-    const goals = [['None', 0], ['7 days', 7], ['30 days', 30], ['60 days', 60], ['90 days', 90]].map((g) => ({
-      label: g[0], on: g[1] === goal, bg: g[1] === goal ? '#141414' : '#F8F3E8', fg: g[1] === goal ? '#EFE8D8' : '#141414',
+    const goals = [['None', 0], ['7 days', 7], ['30 days', 30], ['90 days', 90], ['Custom…', 'custom']].map((g) => ({
+      label: g[0], on: g[1] === choice, bg: g[1] === choice ? '#141414' : '#F8F3E8', fg: g[1] === choice ? '#EFE8D8' : '#141414',
+      border: g[1] === 'custom' && choice !== 'custom' ? 'dashed' : 'solid',
       pick: () => this.setState({ goal: g[1] })
     }));
     return {
-      goals,
+      goals, isCustom: choice === 'custom',
       s: s + 'px', right: Math.round(-0.42 * s) + 'px', top: Math.round(-0.28 * s) + 'px',
       sizeNote: (goal ? 'Goal ' + goal + ' days' : 'No goal, full at 1 year') + ' · ' + Math.round(t * 100) + '% size'
     };

@@ -18,9 +18,9 @@ button{font-family:inherit}
   <header style="display: flex; align-items: center; justify-content: space-between; padding: 26px 8px 14px 20px; border-bottom: 4px solid #141414">
     <div style="display: flex; align-items: center; gap: 12px">
       <div aria-hidden="true" style="display: flex; align-items: flex-end; gap: 4px">
-        <span style="width: 14px; height: 14px; border-radius: 7px; background: #D2382B"></span>
+        <span style="width: 14px; height: 14px; border-radius: 7px; background: #1F4FA3"></span>
+        <span style="width: 13px; height: 13px; background: #D2382B"></span>
         <svg width="15" height="14" viewBox="0 0 15 14"><path d="M7.5 0L15 14H0Z" fill="#F2B300"></path></svg>
-        <span style="width: 13px; height: 13px; background: #1F4FA3"></span>
       </div>
       <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.01em; line-height: 1">counters</h1>
     </div>
@@ -33,20 +33,15 @@ button{font-family:inherit}
       <article style="position: relative; overflow: hidden; border: 2px solid #141414; background: #F8F3E8; min-height: 124px; padding: 12px 16px 16px; box-sizing: border-box">
         <svg aria-hidden="true" viewBox="0 0 100 100" style="position: absolute; width: {{c.s}}; height: {{c.s}}; right: {{c.right}}; top: {{c.top}}"><path d="{{c.d}}" fill="{{c.col}}"></path></svg>
         <div style="position: relative; max-width: 222px; display: flex; flex-direction: column; gap: 4px">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px">
-            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.title}}</span>
-            <button aria-label="Edit counter" style="width: 44px; height: 32px; margin: -6px -10px -6px 0; flex: none; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #141414">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><path d="M4 20h4L19 9l-4-4L4 16v4z"></path></svg>
-            </button>
-          </div>
+          <h2 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.title}}</h2>
           <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap">{{c.big}}<span style="font-weight: 400">{{c.small}}</span></div>
           <span style="font-size: 13px; color: #4A453B">{{c.since}}</span>
           <sc-if value="{{c.hasGoal}}" hint-placeholder-val="{{ false }}">
             <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px">
-              <div style="flex: 1; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 2px">
-                <sc-for list="{{c.cells}}" as="g" hint-placeholder-count="10"><span style="height: 8px; background: {{g.bg}}"></span></sc-for>
+              <div style="flex: 1; height: 8px; background: rgba(20,20,20,0.12)">
+                <div style="height: 8px; width: {{c.pct}}; background: {{c.barColor}}"></div>
               </div>
-              <span style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums">{{c.goalText}}</span>
+              <span style="font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; color: {{c.captionColor}}">{{c.goalText}}</span>
             </div>
           </sc-if>
         </div>
@@ -96,13 +91,16 @@ class Component extends DCLogic {
       const t = Math.min(1, Math.pow(Math.log(1 + ms / 864e5) / Math.log(1 + span), 0.456));
       const s = Math.round(56 + t * 144);
       const f = fmt(ms, c.unit);
-      const done = c.goal ? Math.min(10, Math.floor((ms / (c.goal * 864e5)) * 10)) : 0;
+      const frac = c.goal ? ms / (c.goal * 864e5) : 0;
+      const over = frac > 1;
       return {
         title: c.title, big: f[0], small: f[1], since: c.since,
         d: SHAPE[c.shape], col: COL[c.col],
         s: s + 'px', right: Math.round(-0.42 * s) + 'px', top: Math.round(-0.28 * s) + 'px',
         hasGoal: !!c.goal,
-        cells: Array.from({ length: 10 }, (_, i) => ({ bg: i < done ? '#141414' : 'rgba(20,20,20,0.12)' })),
+        pct: (Math.min(1, frac) * 100).toFixed(1) + '%',
+        barColor: over ? '#B42318' : '#141414',
+        captionColor: over ? '#B42318' : '#141414',
         goalText: c.goal ? f[2] + '/' + c.goal : ''
       };
     });

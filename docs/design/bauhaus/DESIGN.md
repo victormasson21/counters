@@ -75,7 +75,7 @@ There are four fixed pairs, cycling by list position (index `i`, 0-based):
 | 3 | ink (black) | half-moon | `M0 100A50 50 0 0 1 100 100Z` |
 
 - Reordering or deleting counters shifts the pairs. That is intended.
-- The New counter sheet tells the user which pair the new counter will get. Because new counters go to the top (§8), that is always index 0, the **blue circle**. The prototype's "red square" wording predates this.
+- The New counter sheet tells the user which pair the new counter will get. Because new counters go to the top (§8), that is always index 0, the **blue circle**.
 
 ---
 
@@ -129,7 +129,7 @@ A bottom sheet with no rounded corners and a 4 px top rule. Top to bottom:
 2. Name input.
 3. Started: date, time, and a black "NOW" button.
 4. **Precision:** one bordered strip of four equal options, divided by 2 px rules: Days, Hours, Secs, 1/100. The selected option is filled `ink` with paper text.
-5. **Goal · optional, sets when the shape is full size:** square chips for None, 7 days, 30 days, 90 days and Custom…. The selected chip is filled `ink`.
+5. **Goal · optional, sets when the shape is full size:** square chips for None, 7 days, 30 days, 90 days and Custom… (dashed until selected). The selected chip is filled `ink`. Custom shows a number input for 1–90 days.
 6. **Info strip:** the index-0 shape at 28 px (blue circle), then "New counters go to the top and get the **blue circle**. The others shift along. Colours follow list order."
 7. "START COUNTER" primary button.
 
@@ -141,7 +141,7 @@ Same sheet pattern. Top to bottom:
 
 1. "edit counter" and X.
 2. **Live preview card:** a 108 px high card with the counter's shape and timer, plus a meta line such as `Goal 60 days · 78% size`. The shape resizes immediately when the goal changes (size there is `48 + t × 112` to fit the shorter card).
-3. Name, Started, Precision and Goal, prefilled.
+3. Name, Started, Precision and Goal, prefilled with the same options as New counter. A goal that isn't a preset shows as Custom with its number.
 4. **Action row:**
    - Delete: a 58 px square with a red border and a bin icon. It asks for confirmation.
    - Restart: secondary, bordered.

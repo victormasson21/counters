@@ -49,13 +49,13 @@ input::placeholder{color:#7A7466}
       <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase">Goal <span style="font-weight: 400; letter-spacing: 0.04em; text-transform: none; color: #3F3A31">· optional, sets when the shape is full size</span></span>
       <div style="display: flex; gap: 8px; flex-wrap: wrap">
         <sc-for list="{{goals}}" as="g" hint-placeholder-count="5">
-          <button aria-pressed="{{g.on}}" onClick="{{g.pick}}" style="height: 44px; padding: 0 14px; border: 2px solid #141414; background: {{g.bg}}; color: {{g.fg}}; font-size: 15px; font-weight: 600">{{g.label}}</button>
+          <button aria-pressed="{{g.on}}" onClick="{{g.pick}}" style="height: 44px; padding: 0 14px; border: 2px {{g.border}} #141414; background: {{g.bg}}; color: {{g.fg}}; font-size: 15px; font-weight: 600">{{g.label}}</button>
         </sc-for>
       </div>
     </div>
     <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #F8F3E8; border: 2px solid #141414">
-      <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true" style="flex: none"><path d="M0 0H100V100H0Z" fill="#D2382B"></path></svg>
-      <span style="font-size: 14px; line-height: 1.35">This counter gets the <b>red square</b>, the next in the cycle. Colours follow list order.</span>
+      <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true" style="flex: none"><path d="M50 0A50 50 0 1 1 49.99 0Z" fill="#1F4FA3"></path></svg>
+      <span style="font-size: 14px; line-height: 1.35">New counters go to the top and get the <b>blue circle</b>. The others shift along.</span>
     </div>
     <button style="width: 100%; height: 58px; border: 0; background: #141414; color: #EFE8D8; font-size: 17px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase">Start counter</button>
   </section>
@@ -73,6 +73,7 @@ class Component extends DCLogic {
     }));
     const goals = ['None', '7 days', '30 days', '90 days', 'Custom…'].map((l) => ({
       label: l, on: l === goal, bg: l === goal ? '#141414' : '#F8F3E8', fg: l === goal ? '#EFE8D8' : '#141414',
+      border: l === 'Custom…' && l !== goal ? 'dashed' : 'solid',
       pick: () => this.setState({ goal: l })
     }));
     return { precs, goals };
