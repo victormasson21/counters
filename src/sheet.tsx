@@ -37,7 +37,6 @@ export function Sheet({ title, compact = false, onClose, children }: SheetProps)
       onClick={closeOnScrim}
     >
       <div className={compact ? `${styles.body} ${styles.compact}` : styles.body}>
-        <div className={styles.grabber} />
         <header className={styles.header}>
           <h2 className={styles.title}>{title}</h2>
           <button type="button" className={`${buttons.icon} ${styles.close}`} aria-label="Close" onClick={onClose}>

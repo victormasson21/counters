@@ -1,24 +1,21 @@
 :root {
   color-scheme: light;
-  --bg: #f4f1ea;
-  --surface: #fffdf8;
-  --field: #f7f4ee;
-  --segment-track: #efebe2;
-  --border: #e4dfd3;
-  --field-border: #ddd7ca;
-  --dashed: #b9b2a3;
-  --grabber: #d8d2c4;
-  --ink: #1c1b18;
-  --ink-2: #3d3a33;
-  --segment-text: #4e4a42;
-  --muted: #6b675e;
-  --placeholder: #8a857a;
+  --paper: #efe8d8;
+  --card: #f8f3e8;
+  --ink: #141414;
+  --ink-muted: #3f3a31;
+  --placeholder: #7a7466;
+  --track: rgb(20 20 20 / 0.12);
+  --red: #d2382b;
+  --yellow: #f2b300;
+  --blue: #1f4fa3;
   --danger: #b42318;
-  --danger-border: #ebc9c4;
-  --scrim: rgb(28 27 24 / 0.42);
-  font-family: "Geist", system-ui, sans-serif;
+  --scrim: rgb(20 20 20 / 0.5);
+  --rule: 4px solid var(--ink);
+  --border: 2px solid var(--ink);
+  font-family: "Jost", system-ui, sans-serif;
   color: var(--ink);
-  background: var(--bg);
+  background: var(--paper);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -29,17 +26,23 @@
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--bg);
+  background: var(--paper);
 }
 
 button,
 input {
   font: inherit;
   color: inherit;
+  border-radius: 0;
 }
 
 button {
   cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
 }
 
 input::placeholder {

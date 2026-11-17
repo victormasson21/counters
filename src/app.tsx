@@ -7,8 +7,7 @@ import { CounterCard } from "./counter-card"
 import { CounterSheet } from "./counter-sheet"
 import { EmptyState } from "./empty-state"
 import { TICK_MS } from "./format"
-import { MoreIcon, PlusIcon } from "./icons"
-import { paletteAfter } from "./palettes"
+import { AddDot, MenuIcon, ShapesMark } from "./icons"
 import { loadCounters, saveCounters } from "./storage"
 import { useNow } from "./use-now"
 
@@ -56,14 +55,17 @@ export function App(): JSX.Element {
   return (
     <div className={styles.app}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Counters</h1>
+        <div className={styles.brand}>
+          <ShapesMark />
+          <h1 className={styles.title}>counters</h1>
+        </div>
         <button
           type="button"
           className={`${buttons.icon} ${styles.menuButton}`}
           aria-label="Backup and settings"
           popoverTarget={MENU_ID}
         >
-          <MoreIcon />
+          <MenuIcon />
         </button>
         <div ref={menuRef} id={MENU_ID} popover="auto" className={styles.menu}>
           <button type="button" className={styles.menuItem} onClick={openBackup}>
@@ -75,10 +77,11 @@ export function App(): JSX.Element {
         {counters.length === 0 ? (
           <EmptyState />
         ) : (
-          counters.map((counter) => (
+          counters.map((counter, index) => (
             <CounterCard
               key={counter.id}
               counter={counter}
+              index={index}
               now={now}
               onEdit={() => setSheet({ kind: "counter", counter })}
             />
@@ -91,14 +94,14 @@ export function App(): JSX.Element {
           className={`${buttons.primary} ${styles.add}`}
           onClick={() => setSheet({ kind: "counter", counter: null })}
         >
-          <PlusIcon />
+          <AddDot />
           New counter
         </button>
       </footer>
       {sheet?.kind === "counter" && (
         <CounterSheet
           counter={sheet.counter}
-          defaultPalette={paletteAfter(counters[0]?.palette)}
+          index={sheet.counter ? counters.findIndex((counter) => counter.id === sheet.counter?.id) : 0}
           onSave={saveCounter}
           onDelete={deleteCounter}
           onClose={closeSheet}

@@ -1,6 +1,5 @@
 import { isCounter, isGoalDays, type Counter, type Precision } from "./counter"
 import { toLocalDate } from "./datetime"
-import { paletteAt, type PaletteId } from "./palettes"
 
 const JSON_INDENT = 2
 
@@ -17,7 +16,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 const isLegacyUnit = (value: unknown): value is LegacyUnit =>
   typeof value === "string" && Object.hasOwn(LEGACY_PRECISION, value)
 
-function fromLegacy(value: Record<string, unknown>, palette: PaletteId): Counter | null {
+function fromLegacy(value: Record<string, unknown>): Counter | null {
   const { id, title, start, unit, limitDays } = value
   const goalDays = limitDays === 0 ? null : limitDays
   if (
@@ -30,23 +29,23 @@ function fromLegacy(value: Record<string, unknown>, palette: PaletteId): Counter
   ) {
     return null
   }
-  return { id, title, startAt: new Date(start).toISOString(), precision: LEGACY_PRECISION[unit], goalDays, palette }
+  return { id, title, startAt: new Date(start).toISOString(), precision: LEGACY_PRECISION[unit], goalDays }
 }
 
-function toCounter(value: unknown, index: number): Counter | null {
+// Counters saved before the Bauhaus redesign carry a `palette` field. It is ignored and dropped on the next save:
+// colour now comes from a counter's position in the list.
+function toCounter(value: unknown): Counter | null {
   if (!isRecord(value)) {
     return null
   }
-  const fallbackPalette = paletteAt(index)
   if ("unit" in value) {
-    return fromLegacy(value, fallbackPalette)
+    return fromLegacy(value)
   }
-  const candidate = { ...value, palette: value.palette ?? fallbackPalette }
-  if (!isCounter(candidate)) {
+  if (!isCounter(value)) {
     return null
   }
-  const { id, title, startAt, precision, goalDays, palette } = candidate
-  return { id, title, startAt, precision, goalDays, palette }
+  const { id, title, startAt, precision, goalDays } = value
+  return { id, title, startAt, precision, goalDays }
 }
 
 export function parseCounters(json: string): readonly Counter[] | null {

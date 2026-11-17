@@ -1,35 +1,37 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .label {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .hint {
   font-weight: 400;
-  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-muted);
 }
 
 .input {
   width: 100%;
   height: 52px;
-  padding: 0 16px;
-  border: 1px solid var(--field-border);
-  border-radius: 14px;
+  padding: 0 14px;
+  border: var(--border);
   font-size: 17px;
   color: var(--ink);
-  background: var(--field);
+  background: var(--card);
 }
 
 .row {
@@ -43,14 +45,17 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  min-width: 0;
+  padding: 0 10px;
+  font-size: 15px;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 }
 
 .picker:focus-within {
-  border-color: var(--ink);
-  box-shadow: 0 0 0 1px var(--ink);
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
 }
 
 .datePicker {
@@ -71,89 +76,37 @@
   flex: none;
   height: 52px;
   padding: 0 14px;
-  border: 1px solid var(--ink);
-  border-radius: 14px;
-  font-size: 15px;
+  border: var(--border);
+  font-size: 14px;
   font-weight: 600;
-  color: var(--surface);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper);
   background: var(--ink);
-}
-
-.swatches {
-  display: flex;
-  gap: 2px;
-  margin: 0 -20px;
-  padding: 0 14px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.swatch {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.swatchDot {
-  width: 34px;
-  height: 34px;
-  border-radius: 17px;
-}
-
-.swatch[aria-pressed="true"] .swatchDot {
-  box-shadow:
-    0 0 0 2px var(--surface),
-    0 0 0 4px var(--ink);
-}
-
-.ramp {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.rampBar {
-  height: 10px;
-  border-radius: 5px;
-}
-
-.rampCaption {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--muted);
 }
 
 .segments {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 4px;
-  padding: 4px;
-  border-radius: 14px;
-  background: var(--segment-track);
+  border: var(--border);
 }
 
 .segment {
-  height: 40px;
+  height: 44px;
   border: 0;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--segment-text);
-  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--card);
+}
+
+.segment + .segment {
+  border-left: var(--border);
 }
 
 .segment[aria-checked="true"] {
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--surface);
-  box-shadow: 0 1px 2px rgb(28 27 24 / 0.12);
+  color: var(--paper);
+  background: var(--ink);
 }
 
 .chips {
@@ -163,38 +116,49 @@
 }
 
 .chip {
-  height: 40px;
-  padding: 0 16px;
-  border: 1px solid var(--field-border);
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  height: 44px;
+  padding: 0 14px;
+  border: var(--border);
+  font-size: 15px;
+  font-weight: 600;
   color: var(--ink);
-  background: var(--surface);
+  background: var(--card);
 }
 
 .custom {
   border-style: dashed;
-  border-color: var(--dashed);
-  color: var(--ink-2);
 }
 
 .chip[aria-pressed="true"] {
-  border: 1px solid var(--ink);
-  font-weight: 600;
-  color: var(--surface);
+  border-style: solid;
+  color: var(--paper);
   background: var(--ink);
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 14px;
+  border: var(--border);
+  font-size: 14px;
+  line-height: 1.35;
+  background: var(--card);
+}
+
+.info svg {
+  flex: none;
 }
 
 .start {
   width: 100%;
-  margin-top: 4px;
 }
 
 .actions {
   display: flex;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .delete {
@@ -202,12 +166,11 @@
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--danger-border);
-  border-radius: 16px;
+  width: 58px;
+  height: 58px;
+  border: 2px solid var(--danger);
   color: var(--danger);
-  background: var(--surface);
+  background: var(--card);
 }
 
 .restart {
@@ -215,32 +178,47 @@
 }
 
 .save {
-  flex: 1.5;
+  flex: 1.4;
 }
 
 .preview {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 14px 18px 16px;
-  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  height: 108px;
+  padding: 12px 16px;
+  border: var(--border);
+  background: var(--card);
 }
 
-.previewLabel {
-  font-size: 13px;
+.previewBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 222px;
+}
+
+.previewTitle {
+  overflow: hidden;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .previewTimer {
-  font-size: 30px;
+  font-size: 28px;
+}
+
+.previewMeta {
+  font-size: 13px;
+  color: var(--ink-muted);
 }
 
 .compact {
-  gap: 12px;
-}
-
-.compact .field {
-  gap: 6px;
+  gap: 14px;
 }
 
 .compact .input,
@@ -249,5 +227,5 @@
 }
 
 .compact .segment {
-  height: 38px;
+  height: 42px;
 }

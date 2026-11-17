@@ -1,62 +1,95 @@
 .card {
-  display: flex;
-  gap: 4px;
-  align-items: flex-start;
-  padding: 18px 8px 18px 20px;
-  border-radius: 22px;
+  position: relative;
+  overflow: hidden;
+  min-height: 124px;
+  padding: 12px 16px 16px;
+  border: var(--border);
+  background: var(--card);
   cursor: pointer;
 }
 
 .body {
+  position: relative;
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: 6px;
-  min-width: 0;
+  gap: 4px;
+  max-width: 222px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
 }
 
 .title {
   margin: 0;
-  font-size: 15px;
+  overflow: hidden;
+  font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.edit {
+  height: 32px;
+  margin: -6px -10px -6px 0;
 }
 
 .timer {
-  font-size: 34px;
+  font-size: 28px;
 }
 
 .since {
   margin: 0;
   font-size: 13px;
+  color: var(--ink-muted);
 }
 
 .goal {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   margin-top: 6px;
-  padding-right: 12px;
 }
 
-.track {
-  height: 6px;
-  border-radius: 3px;
-  overflow: hidden;
+.cells {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 2px;
 }
 
-.fill {
-  height: 6px;
-  border-radius: 3px;
+.cell {
+  height: 8px;
+  background: var(--track);
+}
+
+.done {
+  background: var(--ink);
 }
 
 .caption {
   margin: 0;
   font-size: 12px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.over {
+.over .done,
+.over .caption {
   animation: pulse 1s steps(1, end) infinite;
+}
+
+.over .done {
+  background: var(--danger);
+}
+
+.over .caption {
+  color: var(--danger);
 }
 
 @keyframes pulse {
@@ -66,7 +99,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .over {
+  .over .done,
+  .over .caption {
     animation: none;
   }
 }

@@ -8,7 +8,6 @@ const coffee: Counter = {
   startAt: "2023-11-14T22:13:20.000Z",
   precision: "seconds",
   goalDays: 30,
-  palette: "moss",
 }
 
 const legacyDrink = {
@@ -42,7 +41,6 @@ describe("parseCounters", () => {
         startAt: "2026-10-05T19:00:00.000Z",
         precision: "centis",
         goalDays: null,
-        palette: "ember",
       },
       {
         id: "run",
@@ -50,18 +48,13 @@ describe("parseCounters", () => {
         startAt: "2026-09-27T10:00:00.000Z",
         precision: "days",
         goalDays: 5,
-        palette: "terracotta",
       },
     ])
   })
 
-  it("assigns a palette by rotation when one is missing", () => {
-    const { palette: _palette, ...withoutPalette } = coffee
-    expect(parseCounters(JSON.stringify([coffee, withoutPalette, withoutPalette]))?.map((counter) => counter.palette)).toEqual([
-      "moss",
-      "terracotta",
-      "marigold",
-    ])
+  it("reads data saved before the redesign and drops its palette", () => {
+    const saved = [{ ...coffee, palette: "moss" }, { ...coffee, id: "b2", palette: "anything" }]
+    expect(parseCounters(JSON.stringify(saved))).toEqual([coffee, { ...coffee, id: "b2" }])
   })
 
   it.each([
@@ -69,7 +62,6 @@ describe("parseCounters", () => {
     ["a single object", JSON.stringify(coffee)],
     ["an unknown precision", JSON.stringify([{ ...coffee, precision: "minutes" }])],
     ["a goal above 90", JSON.stringify([{ ...coffee, goalDays: 91 }])],
-    ["an unknown palette", JSON.stringify([{ ...coffee, palette: "teal" }])],
     ["a non-string title", JSON.stringify([{ ...coffee, title: 3 }])],
     ["an unreadable start", JSON.stringify([{ ...coffee, startAt: "soon" }])],
     ["a legacy limit above 90", JSON.stringify([{ ...legacyDrink, limitDays: 91 }])],

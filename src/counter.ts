@@ -1,5 +1,3 @@
-import { isPaletteId, type PaletteId } from "./palettes"
-
 export const PRECISIONS = ["days", "hours", "seconds", "centis"] as const
 export type Precision = (typeof PRECISIONS)[number]
 
@@ -12,7 +10,6 @@ export type Counter = {
   readonly startAt: string
   readonly precision: Precision
   readonly goalDays: number | null
-  readonly palette: PaletteId
 }
 
 export type GoalProgress = {
@@ -46,9 +43,7 @@ export function isCounter(value: unknown): value is Counter {
     "precision" in value &&
     isPrecision(value.precision) &&
     "goalDays" in value &&
-    isGoalDays(value.goalDays) &&
-    "palette" in value &&
-    isPaletteId(value.palette)
+    isGoalDays(value.goalDays)
   )
 }
 

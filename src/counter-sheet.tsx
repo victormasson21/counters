@@ -1,24 +1,26 @@
 import { useState, type FormEvent, type JSX } from "react"
 import buttons from "./buttons.module.css"
-import { MAX_GOAL_DAYS, MS_PER_DAY, PRECISIONS, startMs, type Counter, type Precision } from "./counter"
+import { MAX_GOAL_DAYS, PRECISIONS, startMs, type Counter, type Precision } from "./counter"
 import styles from "./counter-sheet.module.css"
 import { startFromInput, toLocalDate, toLocalTime } from "./datetime"
 import { ElapsedText } from "./elapsed-text"
 import { dateLabel, TICK_MS } from "./format"
-import { cardStyle, rampBar, swatchBackground } from "./heat"
+import { CounterShapeArt } from "./counter-shape"
 import { BinIcon, RestartIcon } from "./icons"
-import { PALETTES, paletteById, type PaletteId } from "./palettes"
+import { growth, SHAPE_COLORS, shapeAt } from "./shape"
 import { Sheet } from "./sheet"
 import { useNow } from "./use-now"
 
 const PRECISION_LABELS: Readonly<Record<Precision, string>> = {
   days: "Days",
   hours: "Hours",
-  seconds: "Seconds",
-  centis: "1/100 s",
+  seconds: "Secs",
+  centis: "1/100",
 }
 
-const PRESET_GOALS = [7, 30] as const
+const PRESET_GOALS = [7, 30, 90] as const
+const PREVIEW_SHAPE_MIN = 48
+const PREVIEW_SHAPE_MAX = 160
 const NON_BLANK_PATTERN = ".*\\S.*"
 const DEFAULT_PRECISION: Precision = "days"
 
@@ -33,21 +35,21 @@ function initialGoalChoice(goalDays: number | null): GoalChoice {
 
 type CounterSheetProps = {
   readonly counter: Counter | null
-  readonly defaultPalette: PaletteId
+  /** The counter's place in the list. A new counter goes to the top, so it is 0. */
+  readonly index: number
   readonly onSave: (counter: Counter) => void
   readonly onDelete: (id: string) => void
   readonly onClose: () => void
 }
 
-export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClose }: CounterSheetProps): JSX.Element {
+export function CounterSheet({ counter, index, onSave, onDelete, onClose }: CounterSheetProps): JSX.Element {
   const [title, setTitle] = useState(counter?.title ?? "")
   const [start, setStart] = useState(() => (counter ? startMs(counter) : Date.now()))
   const [precision, setPrecision] = useState(counter?.precision ?? DEFAULT_PRECISION)
-  const [palette, setPalette] = useState(counter?.palette ?? defaultPalette)
   const [goalChoice, setGoalChoice] = useState(initialGoalChoice(counter?.goalDays ?? null))
   const [customGoal, setCustomGoal] = useState(counter?.goalDays?.toString() ?? "")
   const now = useNow(TICK_MS[precision])
-  const stops = paletteById(palette).stops
+  const shape = shapeAt(index)
 
   function goalDays(): number | null {
     switch (goalChoice) {
@@ -74,7 +76,6 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
       startAt: new Date(start).toISOString(),
       precision,
       goalDays: goalDays(),
-      palette,
     })
   }
 
@@ -91,17 +92,23 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
   }
 
   const elapsed = now - start
-  const preview = cardStyle(stops, elapsed / MS_PER_DAY)
+  const previewGoal = goalChoice === "custom" ? Number(customGoal) || null : goalDays()
+  const previewGrowth = growth(elapsed, previewGoal)
 
   return (
     <Sheet title={counter ? "Edit counter" : "New counter"} compact={counter !== null} onClose={onClose}>
       <form className={counter ? `${styles.form} ${styles.compact}` : styles.form} onSubmit={handleSubmit}>
         {counter && (
-          <div className={styles.preview} style={{ background: preview.background, color: preview.color }}>
-            <span className={styles.previewLabel} style={{ color: preview.secondaryColor }}>
-              {title.trim() || counter.title} · {preview.intensityPct}% intensity
-            </span>
-            <ElapsedText elapsed={elapsed} precision={precision} className={styles.previewTimer} />
+          <div className={styles.preview}>
+            <CounterShapeArt shape={shape} t={previewGrowth} minSize={PREVIEW_SHAPE_MIN} maxSize={PREVIEW_SHAPE_MAX} />
+            <div className={styles.previewBody}>
+              <span className={styles.previewTitle}>{title.trim() || counter.title}</span>
+              <ElapsedText elapsed={elapsed} precision={precision} className={styles.previewTimer} />
+              <span className={styles.previewMeta}>
+                {previewGoal ? `Goal ${previewGoal} days` : "No goal, full at 1 year"} · {Math.round(previewGrowth * 100)}%
+                size
+              </span>
+            </div>
           </div>
         )}
 
@@ -151,35 +158,6 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
         </div>
 
         <div className={styles.field}>
-          <span className={styles.label}>
-            Colour <span className={styles.hint}>· {paletteById(palette).name}</span>
-          </span>
-          <div className={styles.swatches}>
-            {PALETTES.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                className={styles.swatch}
-                aria-label={option.name}
-                aria-pressed={option.id === palette}
-                onClick={() => setPalette(option.id)}
-              >
-                <span className={styles.swatchDot} style={{ background: swatchBackground(option.stops) }} />
-              </button>
-            ))}
-          </div>
-          {!counter && (
-            <div className={styles.ramp}>
-              <div className={styles.rampBar} style={{ background: rampBar(stops) }} />
-              <div className={styles.rampCaption}>
-                <span>Just started</span>
-                <span>Deepens as it runs</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.field}>
           <span className={styles.label}>Precision</span>
           <div className={styles.segments} role="radiogroup" aria-label="Precision">
             {PRECISIONS.map((option) => (
@@ -199,7 +177,7 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
 
         <div className={styles.field}>
           <span className={styles.label}>
-            Goal <span className={styles.hint}>· optional</span>
+            Goal <span className={styles.hint}>· optional, sets when the shape is full size</span>
           </span>
           <div className={styles.chips}>
             <button
@@ -261,9 +239,19 @@ export function CounterSheet({ counter, defaultPalette, onSave, onDelete, onClos
             </button>
           </div>
         ) : (
-          <button type="submit" className={`${buttons.primary} ${styles.start}`}>
-            Start counter
-          </button>
+          <>
+            <p className={styles.info}>
+              <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true">
+                <path d={shape.path} fill={SHAPE_COLORS[shape.color]} />
+              </svg>
+              <span>
+                New counters go to the top and get the <b>{shape.name}</b>. The others shift along.
+              </span>
+            </p>
+            <button type="submit" className={`${buttons.primary} ${styles.start}`}>
+              Start counter
+            </button>
+          </>
         )}
       </form>
     </Sheet>

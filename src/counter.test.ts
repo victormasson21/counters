@@ -10,7 +10,6 @@ const counterWithGoal = (goalDays: number | null): Counter => ({
   startAt: new Date(start).toISOString(),
   precision: "days",
   goalDays,
-  palette: "ember",
 })
 
 describe("goalProgress", () => {
@@ -42,13 +41,16 @@ describe("isCounter", () => {
     expect(isCounter(valid)).toBe(true)
   })
 
+  it("accepts a counter saved before the redesign, with a palette", () => {
+    expect(isCounter({ ...valid, palette: "ember" })).toBe(true)
+  })
+
   it.each([
     ["an unreadable start", { ...valid, startAt: "soon" }],
     ["an unknown precision", { ...valid, precision: "minutes" }],
     ["a goal above 90", { ...valid, goalDays: 91 }],
     ["a goal of 0", { ...valid, goalDays: 0 }],
     ["a fractional goal", { ...valid, goalDays: 1.5 }],
-    ["an unknown palette", { ...valid, palette: "teal" }],
   ])("rejects %s", (_label, value) => {
     expect(isCounter(value)).toBe(false)
   })
