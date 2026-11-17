@@ -10,7 +10,7 @@ Unchanged from v1:
 - the bottom-sheet behaviour
 - the delete and restart confirmations
 
-The app icon is still the lemon slice. Use the existing `counters-pwa-icons` bundle.
+The app icon is the **shape stack**: a red square, blue circle and yellow triangle on a black baseline, on paper (`#EFE8D8`). It is in `public/icons/`, with a maskable variant scaled to 78% for Android's safe zone.
 
 ---
 

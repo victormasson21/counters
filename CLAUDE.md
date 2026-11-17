@@ -1,6 +1,6 @@
 # Counters
 
-Personal PWA that shows the time elapsed since events. Vite, React, TypeScript, pnpm. Data lives in the browser's `localStorage`; there is no backend. Visual design: `docs/design/design-spec.md` (its §10 decisions override the rest). First spec and plan: `docs/superpowers/`.
+Personal PWA that shows the time elapsed since events. Vite, React, TypeScript, pnpm. Data lives in the browser's `localStorage`; there is no backend. Visual design: `docs/design/bauhaus/DESIGN.md` (the Bauhaus redesign; its §8 carries over earlier decisions). The previous heat-gradient design is `docs/design/design-spec.md`, tagged `v1-heat-gradient`. First spec and plan: `docs/superpowers/`.
 
 ## Git
 
@@ -11,7 +11,7 @@ Personal PWA that shows the time elapsed since events. Vite, React, TypeScript, 
 ## Commands
 
 - `pnpm dev` — dev server on `localhost:5173`
-- `pnpm test` — Vitest unit tests on the pure logic (`counter`, `format`, `heat`, `palettes`, `datetime`, `backup`)
+- `pnpm test` — Vitest unit tests on the pure logic (`counter`, `format`, `shape`, `datetime`, `backup`, `storage`)
 - `pnpm lint` — oxlint
 - `pnpm build` — type-check, then build `dist` with the PWA manifest, icons and service worker
 

@@ -1,3 +1,5 @@
+> **Superseded** by the Bauhaus redesign in [`bauhaus/DESIGN.md`](bauhaus/DESIGN.md). This file describes the heat-gradient design, tagged `v1-heat-gradient`.
+
 # Counters — design spec (v1: "Refined + heat gradient")
 
 This spec covers the redesign of the four app screens: **List**, **Empty**, **New counter** and **Edit counter**.
